@@ -1,0 +1,37 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Mac
+.DS_Store
+
+# Logs
+*.log
+
+# Others
+TestResults/
+*.vs/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# NuGet
+*.nupkg
+# Paket
+.paket/
+paket-files/
+
+# Resharper
+*.ReSharper*/
+*.[Rr]e[Ss]harper
+
+# Rider
+.idea/
+*.sln.iml
