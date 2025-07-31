@@ -1,33 +1,32 @@
-using CleanArchitecture.Application.Interfaces;
-using CleanArchitecture.Application.Services;
 using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Application.Mappings;
-using CleanArchitecture.Application.Handlers;
-using CleanArchitecture.Application.Queries;
-using CleanArchitecture.Application.Commands;
+using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add Infrastructure
-builder.Services.AddInfrastructure(builder.Configuration);
-
-// Add Application Services
-builder.Services.AddScoped<IProductService, ProductService>();
+// Add MediatR
+builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(Program).Assembly); });
 
 // Add AutoMapper
-builder.Services.AddAutoMapper(typeof(ProductMappingProfile));
+builder.Services.AddAutoMapper(typeof(OrganizationMappingProfile));
 
-// Add MediatR
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssembly(typeof(GetAllProductsQuery).Assembly);
-    cfg.RegisterServicesFromAssembly(typeof(CreateProductCommand).Assembly);
-});
+// Add DbContext
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    ));
+
+// Add Infrastructure services
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 
@@ -39,7 +38,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
