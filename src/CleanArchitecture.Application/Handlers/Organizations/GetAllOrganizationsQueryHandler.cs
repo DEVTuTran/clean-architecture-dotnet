@@ -4,7 +4,7 @@ using CleanArchitecture.Domain.Repositories;
 using CleanArchitecture.Application.Queries.Organizations;
 using CleanArchitecture.Application.DTOs;
 
-namespace CleanArchitecture.Application.Features.Organization.Handlers;
+namespace CleanArchitecture.Application.Handlers.Organizations;
 
 public class GetAllOrganizationsQueryHandler : IRequestHandler<GetAllOrganizationsQuery, IEnumerable<OrganizationDto>>
 {
