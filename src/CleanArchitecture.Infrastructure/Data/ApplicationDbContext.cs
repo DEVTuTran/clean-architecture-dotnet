@@ -107,6 +107,31 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(pc => pc.TaxId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // Configure OrganizationUser relationships
+        modelBuilder.Entity<OrganizationUser>()
+            .HasOne(ou => ou.User)
+            .WithMany(u => u.OrganizationUsers)
+            .HasForeignKey(ou => ou.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<OrganizationUser>()
+            .HasOne(ou => ou.Organization)
+            .WithMany(o => o.OrganizationUsers)
+            .HasForeignKey(ou => ou.OrganizationId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<OrganizationUser>()
+            .HasOne(ou => ou.Role)
+            .WithMany(r => r.OrganizationUsers)
+            .HasForeignKey(ou => ou.RoleId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<OrganizationUser>()
+            .HasOne(ou => ou.InvitedByUser)
+            .WithMany()
+            .HasForeignKey(ou => ou.InvitedBy)
+            .OnDelete(DeleteBehavior.SetNull);
+
         // Configure indexes
         modelBuilder.Entity<Organization>()
             .HasIndex(o => o.Code)

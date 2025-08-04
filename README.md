@@ -5,7 +5,9 @@ Dự án Clean Architecture .NET được cấu trúc lại dựa trên database
 ## Cấu trúc dự án
 
 ### Domain Layer
+
 - **Entities**: Các entity chính của hệ thống
+
   - `Organization`: Tổ chức
   - `User`: Người dùng
   - `Client`: Khách hàng
@@ -20,6 +22,7 @@ Dự án Clean Architecture .NET được cấu trúc lại dựa trên database
   - `IClientRepository`
 
 ### Application Layer
+
 - **Commands**: Các command để thực hiện thao tác
 - **Queries**: Các query để lấy dữ liệu
 - **Handlers**: Xử lý các command và query
@@ -27,25 +30,30 @@ Dự án Clean Architecture .NET được cấu trúc lại dựa trên database
 - **Mappings**: AutoMapper profiles
 
 ### Infrastructure Layer
+
 - **Data**: Entity Framework DbContext
 - **Repositories**: Implementation của các repository interface
 
 ### API Layer
+
 - **Controllers**: REST API endpoints
 
 ## Cài đặt và chạy
 
 ### Yêu cầu
+
 - .NET 8.0
 - MySQL Server
 - Entity Framework Core Tools
 
 ### Cài đặt database
+
 1. Tạo database MySQL với tên `kaburaya`
 2. Chạy script SQL từ file `kaburaya.sql`
 3. Cập nhật connection string trong `appsettings.json`
 
 ### Chạy ứng dụng
+
 ```bash
 cd src/CleanArchitecture.API
 dotnet run
@@ -54,6 +62,7 @@ dotnet run
 ## API Endpoints
 
 ### Organizations
+
 - `GET /api/organizations` - Lấy danh sách tổ chức
 - `GET /api/organizations/{id}` - Lấy tổ chức theo ID
 - `POST /api/organizations` - Tạo tổ chức mới
@@ -63,6 +72,7 @@ dotnet run
 ## Cấu trúc Database
 
 Hệ thống sử dụng MySQL với các bảng chính:
+
 - `organization`: Thông tin tổ chức
 - `user`: Người dùng hệ thống
 - `client`: Khách hàng
@@ -73,7 +83,35 @@ Hệ thống sử dụng MySQL với các bảng chính:
 ## Clean Architecture Principles
 
 Dự án tuân thủ các nguyên tắc Clean Architecture:
+
 - **Dependency Inversion**: Domain layer không phụ thuộc vào Infrastructure
 - **Separation of Concerns**: Mỗi layer có trách nhiệm riêng biệt
 - **Testability**: Dễ dàng test từng layer độc lập
 - **Maintainability**: Code dễ bảo trì và mở rộng
+
+# Cài đặt Entity Framework Tools
+
+dotnet tool install --global dotnet-ef
+
+# Tạo Migration
+
+dotnet ef migrations add InitialCreate --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
+
+#Apply Migration
+dotnet ef database update --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
+
+# Tạo migration mới
+
+dotnet ef migrations add MigrationName --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
+
+# Update database
+
+dotnet ef database update --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
+
+# Remove migration cuối
+
+dotnet ef migrations remove --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
+
+# Generate SQL script
+
+dotnet ef migrations script --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API

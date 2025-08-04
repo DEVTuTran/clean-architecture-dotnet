@@ -20,7 +20,7 @@ builder.Services.AddMediatR(cfg =>
 });
 
 // Add AutoMapper
-builder.Services.AddAutoMapper(typeof(OrganizationMappingProfile));
+builder.Services.AddAutoMapper(typeof(OrganizationMappingProfile), typeof(UserMappingProfile));
 
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -46,5 +46,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed database
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await DbInitializer.SeedAsync(context);
+}
 
 app.Run();
