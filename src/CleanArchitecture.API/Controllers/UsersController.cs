@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using CleanArchitecture.Application.DTOs;
-using CleanArchitecture.Application.Commands.User;
-using CleanArchitecture.Application.Queries.User;
+using CleanArchitecture.Application.Commands.Users;
+using CleanArchitecture.Application.Queries.Users;
 
 namespace CleanArchitecture.API.Controllers;
 

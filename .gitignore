@@ -35,3 +35,7 @@ paket-files/
 # Rider
 .idea/
 *.sln.iml
+
+# env
+appsettings.*.json
+appsettings.json

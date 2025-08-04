@@ -1,117 +1,91 @@
-# Clean Architecture .NET - Kaburaya System
+# Clean Architecture .NET Project
 
-Dự án Clean Architecture .NET được cấu trúc lại dựa trên database schema Kaburaya, một hệ thống quản lý tổ chức và khách hàng.
+A .NET 8 Clean Architecture project with Firebase Authentication support.
 
-## Cấu trúc dự án
+## Features
 
-### Domain Layer
+- **Clean Architecture** with Domain, Application, Infrastructure, and API layers
+- **Firebase Authentication** for user registration and login
+- **JWT Token** authentication for API access
+- **Entity Framework Core** with MySQL
+- **MediatR** for CQRS pattern
+- **AutoMapper** for object mapping
+- **Swagger/OpenAPI** documentation
 
-- **Entities**: Các entity chính của hệ thống
+## Authentication Endpoints
 
-  - `Organization`: Tổ chức
-  - `User`: Người dùng
-  - `Client`: Khách hàng
-  - `ClientData`: Dữ liệu khách hàng
-  - `PaymentCollection`: Thanh toán
-  - `AuditLog`: Nhật ký hoạt động
-  - Và các entity phụ trợ khác
+### Firebase Authentication
 
-- **Repositories**: Interface định nghĩa các thao tác CRUD
-  - `IOrganizationRepository`
-  - `IUserRepository`
-  - `IClientRepository`
+- `POST /api/auth/firebase-login` - Login with Firebase ID token
+- `POST /api/auth/register` - Register new user with Firebase
+- `POST /api/auth/refresh-token` - Refresh JWT token
+- `GET /api/auth/me` - Get current user information
+- `POST /api/auth/logout` - Logout (client-side)
 
-### Application Layer
+### Test Endpoints
 
-- **Commands**: Các command để thực hiện thao tác
-- **Queries**: Các query để lấy dữ liệu
-- **Handlers**: Xử lý các command và query
-- **DTOs**: Data Transfer Objects
-- **Mappings**: AutoMapper profiles
+- `GET /api/test/public` - Public endpoint (no auth required)
+- `GET /api/test/authenticated` - Protected endpoint (auth required)
+- `GET /api/test/optional` - Optional authentication endpoint
 
-### Infrastructure Layer
+## Setup
 
-- **Data**: Entity Framework DbContext
-- **Repositories**: Implementation của các repository interface
+1. **Firebase Configuration**
 
-### API Layer
+   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+   - Download your service account key and save as `firebase-service-account-key.json`
+   - Update `appsettings.json` with your Firebase project details
 
-- **Controllers**: REST API endpoints
+2. **Database**
 
-## Cài đặt và chạy
+   - Update the connection string in `appsettings.json`
+   - Run migrations: `dotnet ef database update`
 
-### Yêu cầu
+3. **JWT Configuration**
+   - Update the JWT secret key in `appsettings.json`
+   - Ensure the secret key is at least 16 characters long
 
-- .NET 8.0
-- MySQL Server
-- Entity Framework Core Tools
-
-### Cài đặt database
-
-1. Tạo database MySQL với tên `kaburaya`
-2. Chạy script SQL từ file `kaburaya.sql`
-3. Cập nhật connection string trong `appsettings.json`
-
-### Chạy ứng dụng
+## Running the Application
 
 ```bash
+# Restore packages
+dotnet restore
+
+# Build the solution
+dotnet build
+
+# Run the API
 cd src/CleanArchitecture.API
 dotnet run
 ```
 
-## API Endpoints
+The API will be available at `https://localhost:7001` with Swagger documentation at `/swagger`.
 
-### Organizations
+## Firebase Setup
 
-- `GET /api/organizations` - Lấy danh sách tổ chức
-- `GET /api/organizations/{id}` - Lấy tổ chức theo ID
-- `POST /api/organizations` - Tạo tổ chức mới
-- `PUT /api/organizations/{id}` - Cập nhật tổ chức
-- `DELETE /api/organizations/{id}` - Xóa tổ chức
+See [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for detailed Firebase configuration instructions.
 
-## Cấu trúc Database
+## Project Structure
 
-Hệ thống sử dụng MySQL với các bảng chính:
+```
+src/
+├── CleanArchitecture.API/          # Web API layer
+├── CleanArchitecture.Application/  # Application layer (CQRS, DTOs, Mappings)
+├── CleanArchitecture.Domain/       # Domain layer (Entities, Repositories)
+└── CleanArchitecture.Infrastructure/ # Infrastructure layer (DbContext, Services)
+```
 
-- `organization`: Thông tin tổ chức
-- `user`: Người dùng hệ thống
-- `client`: Khách hàng
-- `client_data`: Dữ liệu khách hàng
-- `payment_collection`: Lịch sử thanh toán
-- `audit_log`: Nhật ký hoạt động
+## Authentication Flow
 
-## Clean Architecture Principles
+1. **Client** authenticates with Firebase (email/password, Google, etc.)
+2. **Client** sends Firebase ID token to `/api/auth/firebase-login`
+3. **API** verifies Firebase token and creates/updates user in database
+4. **API** returns JWT token for subsequent API calls
+5. **Client** uses JWT token in `Authorization: Bearer` header
 
-Dự án tuân thủ các nguyên tắc Clean Architecture:
+## Security
 
-- **Dependency Inversion**: Domain layer không phụ thuộc vào Infrastructure
-- **Separation of Concerns**: Mỗi layer có trách nhiệm riêng biệt
-- **Testability**: Dễ dàng test từng layer độc lập
-- **Maintainability**: Code dễ bảo trì và mở rộng
-
-# Cài đặt Entity Framework Tools
-
-dotnet tool install --global dotnet-ef
-
-# Tạo Migration
-
-dotnet ef migrations add InitialCreate --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
-
-#Apply Migration
-dotnet ef database update --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
-
-# Tạo migration mới
-
-dotnet ef migrations add MigrationName --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
-
-# Update database
-
-dotnet ef database update --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
-
-# Remove migration cuối
-
-dotnet ef migrations remove --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
-
-# Generate SQL script
-
-dotnet ef migrations script --project src/CleanArchitecture.Infrastructure --startup-project src/CleanArchitecture.API
+- Firebase handles user authentication securely
+- JWT tokens for API authorization
+- HTTPS required in production
+- Service account keys should never be committed to version control
