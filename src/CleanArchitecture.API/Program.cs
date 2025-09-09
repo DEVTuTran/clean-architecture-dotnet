@@ -1,5 +1,4 @@
 using CleanArchitecture.Application.Interfaces;
-using CleanArchitecture.Application.Services;
 using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Application.Mappings;
 using CleanArchitecture.Application.Handlers;
@@ -15,9 +14,6 @@ builder.Services.AddSwaggerGen();
 
 // Add Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
-
-// Add Application Services
-builder.Services.AddScoped<IProductService, ProductService>();
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(ProductMappingProfile));

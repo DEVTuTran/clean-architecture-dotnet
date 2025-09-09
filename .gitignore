@@ -35,3 +35,7 @@ paket-files/
 # Rider
 .idea/
 *.sln.iml
+
+# Ignore all appsettings.*.json files
+appsettings.*.json
+**/appsettings.*.json

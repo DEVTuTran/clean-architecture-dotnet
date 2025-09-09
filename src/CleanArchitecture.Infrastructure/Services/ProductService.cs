@@ -4,7 +4,7 @@ using CleanArchitecture.Application.Interfaces;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Repositories;
 
-namespace CleanArchitecture.Application.Services;
+namespace CleanArchitecture.Infrastructure.Services;
 
 public class ProductService : IProductService
 {
